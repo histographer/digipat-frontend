@@ -11,7 +11,7 @@
     <b-loading :is-full-page="false" :active="loading" />
     <div v-if="!loading" class="panel">
       <div class="panel-heading">
-        <p>ROI Groups</p>
+        <p>Annotation Groups</p>
         <button class="button is-link" @click="startNewAnalysis">
           Start new analysis
         </button>
@@ -36,7 +36,7 @@
             </b-table-column>
 
             <b-table-column centered width="90">
-              <button @click="openModal(group)" class="button is-link">Results</button>
+              <router-link :to="{ name: 'results', params: { idGroup: group.id, group }}" class="button is-link">Results</router-link>
             </b-table-column>
           </template>
 
@@ -56,7 +56,6 @@
         </b-table>
       </div>
     </div>
-    <AnnotationGroupModal :isActive="isModalActive" :group="modalGroup" v-on:closeModal="closeModal"/>
   </div>
 </template>
 
@@ -76,13 +75,11 @@ const storeOptions = {rootModuleProp: 'storeModule'};
 export default {
   name: 'analyze',
   components: {
-    AnnotationGroupModal,
     CytomineTable,
   },
   data() {
     return {
       loading: true,
-      isModalActive: false,
       modalGroup: {},
       error: false,
       revision: 0,
@@ -105,13 +102,6 @@ export default {
       });
       const resp = await collection.fetchAll();
       this.images = resp._data;
-    },
-    openModal(group) {
-      this.modalGroup = group;
-      this.isModalActive = true;
-    },
-    closeModal() {
-      this.isModalActive = false;
     },
     async fetchStatus(group) {
       const fetchedStatus = await fetch(`http://localhost:9292//analysisInformation?annotationGroupId=${group.id}`);
