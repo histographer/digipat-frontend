@@ -32,18 +32,7 @@ export default {
   data() {
     return {
       name: '',
-      availableTypes: [
-        {
-          name: 'Hematoxylin and eosin',
-          value: 'he',
-          checked: false,
-        },
-        {
-          name: 'RGB',
-          value: 'rgb',
-          checked: false,
-        },
-      ],
+      availableTypes: [],
     };
   },
   computed: {
@@ -95,6 +84,22 @@ export default {
 
       await this.$router.push({ path: `/project/${this.project.id}/analyze` });
     },
+    async getAvailableTypes() {
+      const getAll = await fetch('http/localhost:9292/availableAnalysisTypes');
+      const response = await getAll.json();
+      const availableTypes = [];
+      response.analysisTypes.forEach((available) => {
+        availableTypes.push({
+          name: available,
+          value: available,
+          checked: false,
+        });
+      });
+      return availableTypes;
+    },
+  },
+  async created() {
+    this.availableTypes = await this.getAvailableTypes();
   },
 };
 </script>
@@ -118,5 +123,9 @@ export default {
   button {
     width: 50%;
     margin: 3rem auto 2rem auto;
+  }
+
+  .checkbox {
+    text-transform: uppercase;
   }
 </style>
