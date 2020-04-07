@@ -110,7 +110,7 @@ export default {
       this.images = resp._data;
     },
     async fetchStatus(group) {
-      const fetchedStatus = await fetch(`http://localhost:9292//analysisInformation?annotationGroupId=${group.id}`);
+      const fetchedStatus = await fetch(`${this.$store.state.baseUrl}/analysisInformation?annotationGroupId=${group.id}`);
       const response = await fetchedStatus.json();
       group.failed = 0;
       group.pending = 0;
@@ -144,7 +144,7 @@ export default {
   async created() {
     try {
       this.getAllImages();
-      const fetchedGroups = await fetch(`http://localhost:9292/annotationGroup?projectId=${this.project.id}`);
+      const fetchedGroups = await fetch(`${this.$store.state.baseUrl}/annotationGroup?projectId=${this.project.id}`);
       const response = await fetchedGroups.json();
       const responseGroups = response.groups;
       let groups = [];

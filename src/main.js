@@ -77,6 +77,9 @@ import App from './App.vue';
 Vue.config.productionTip = false;
 Vue.prototype.$eventBus = new Vue();
 
+// Set baseURL
+store.commit('changeBaseUrl', 'http://localhost:9292');
+
 new Vue({
   render: h => h(App),
   router,

@@ -1,6 +1,7 @@
 <template>
-   <div class="content-wrapper">
-     <div class="panel">
+  <div class="content-wrapper">
+     <b-loading :is-full-page="false" :active="loading" />
+     <div v-if="!loading" class="panel">
        <div class="panel-heading" style="text-align: center; width: 50%; margin: auto;">
          <p>Choose wanted analyses</p>
        </div>
@@ -33,6 +34,7 @@ export default {
     return {
       name: '',
       availableTypes: [],
+      loading: true,
     };
   },
   computed: {
@@ -50,7 +52,7 @@ export default {
         // Needs to have a name, throw error
         this.$notify({type: 'error', text: 'You need to give the annotation group a name!'});
       }
-      const createResponse = await fetch('http://localhost:9292/annotationGroup', {
+      const createResponse = await fetch(`${this.$store.state.baseUrl}/annotationGroup`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -68,7 +70,7 @@ export default {
         groupId: createResponseData.groupId,
         analysis: this.availableTypes.filter(item => item.checked).map(item => item.value),
       };
-      await fetch('http://localhost:9292/startAnalysis', {
+      await fetch(`${this.$store.state.baseUrl}/startAnalysis`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -85,7 +87,7 @@ export default {
       await this.$router.push({ path: `/project/${this.project.id}/analyze` });
     },
     async getAvailableTypes() {
-      const getAll = await fetch('http/localhost:9292/availableAnalysisTypes');
+      const getAll = await fetch(`${this.$store.state.baseUrl}/availableAnalysisTypes`);
       const response = await getAll.json();
       const availableTypes = [];
       response.analysisTypes.forEach((available) => {
@@ -100,6 +102,7 @@ export default {
   },
   async created() {
     this.availableTypes = await this.getAvailableTypes();
+    this.loading = false;
   },
 };
 </script>

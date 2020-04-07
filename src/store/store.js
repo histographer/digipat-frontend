@@ -24,6 +24,14 @@ import listProjects from './modules/list-projects.js';
 
 Vue.use(Vuex);
 let store = new Vuex.Store({
+  state: {
+    baseUrl: '',
+  },
+  mutations: {
+    changeBaseUrl(state, payload) {
+      state.baseUrl = payload;
+    },
+  },
   actions: {
     logout({state, commit}) {
       commit('currentUser/resetState');
