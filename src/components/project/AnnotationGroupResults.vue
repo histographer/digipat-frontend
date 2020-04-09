@@ -68,11 +68,12 @@ export default {
       const annotationObject = await Annotation.fetch(annotationId);
       this.$router.push({ path: `/project/${projectId}/image/${annotationObject.image}/annotation/${annotationId}`});
     },
-    downloadCSV(name) {
+    async downloadCSV(name) {
       try {
-        let csvContent = '';
-        let a = this.$refs.download[0];
-        const csv = atob(csvContent),
+        let csvContent = await fetch(`${this.$store.state.baseUrl}/exportAnalysisResults?groupId=${this.group.groupId}`);
+        csvContent = await csvContent.json();
+        let a = this.$refs.download;
+        const csv = atob(csvContent.data),
           blob = new Blob([csv], {type: 'data:application/octet-stream;base64'}),
           url = window.URL.createObjectURL(blob);
         a.href = url;
@@ -96,12 +97,12 @@ export default {
       }
       else {
         this.group = await group.json();
+        this.loading = false;
       }
     }
   },
   async created() {
     await this.fetchData();
-    this.loading = false;
   }
 };
 </script>
