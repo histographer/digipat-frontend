@@ -1,7 +1,7 @@
 <template>
   <div class="content-wrapper template-container">
     <div class="panel-heading">
-      <h1>Previously selected area</h1>
+      <h1>Target area</h1>
     </div>
   <div class="panel-block">
     <div>

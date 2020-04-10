@@ -11,7 +11,7 @@
     <b-loading :is-full-page="false" :active="loading" />
     <div v-if="!loading" class="panel">
       <div class="panel-heading">
-        <p>ROI Groups</p>
+        <p>Annotation Groups</p>
         <button class="button is-link" @click="startNewAnalysis">
           Start new analysis
         </button>
@@ -31,12 +31,20 @@
               <h3>{{ group.name }}</h3>
             </b-table-column>
 
-            <b-table-column label="Status" width="90" centered>
-              <p v-if="group.status" :class="`status ${group.status}`">{{ group.status }}</p>
+            <b-table-column label="Failed" width="40" centered>
+              <p>{{ group.failed }}</p>
             </b-table-column>
 
-            <b-table-column centered width="90">
-              <button @click="openModal(group)" class="button is-link">Results</button>
+            <b-table-column label="Pending" width="4" centered>
+              <p>{{ group.pending }}</p>
+            </b-table-column>
+
+            <b-table-column label="Success" width="40" centered>
+              <p>{{ group.success }}</p>
+            </b-table-column>
+
+            <b-table-column width="2" centered>
+              <router-link :to="{ name: 'results', params: { idGroup: group.id, group }}" class="button is-link">Results</router-link>
             </b-table-column>
           </template>
 
@@ -56,7 +64,6 @@
         </b-table>
       </div>
     </div>
-    <AnnotationGroupModal :isActive="isModalActive" :group="modalGroup" v-on:closeModal="closeModal"/>
   </div>
 </template>
 
@@ -67,8 +74,6 @@ import {ImageInstanceCollection} from 'cytomine-client';
 
 import CytomineTable from '../utils/CytomineTable';
 
-import AnnotationGroupModal from './AnnotationGroupModal';
-
 // store options to use with store helpers to target projects/currentProject/listImages module
 const storeOptions = {rootModuleProp: 'storeModule'};
 // redefine helpers to use storeOptions and correct module path
@@ -76,13 +81,11 @@ const storeOptions = {rootModuleProp: 'storeModule'};
 export default {
   name: 'analyze',
   components: {
-    AnnotationGroupModal,
     CytomineTable,
   },
   data() {
     return {
       loading: true,
-      isModalActive: false,
       modalGroup: {},
       error: false,
       revision: 0,
@@ -106,23 +109,22 @@ export default {
       const resp = await collection.fetchAll();
       this.images = resp._data;
     },
-    openModal(group) {
-      this.modalGroup = group;
-      this.isModalActive = true;
-    },
-    closeModal() {
-      this.isModalActive = false;
-    },
     async fetchStatus(group) {
-      const fetchedStatus = await fetch(`http://localhost:9292//analysisInformation?annotationGroupId=${group.id}`);
+      const fetchedStatus = await fetch(`${this.$store.state.baseUrl}/analysisInformation?annotationGroupId=${group.id}`);
       const response = await fetchedStatus.json();
-      group.status = response.analyses[0].status;
+      group.failed = 0;
+      group.pending = 0;
+      group.success = 0;
 
       response.analyses.forEach((analysis) => {
-        if (group.status === 'failure') return;
-        if ((group.status === 'pending' && analysis.status === 'failure') ||
-            (group.status === 'success' && analysis.status === 'pending')) {
-          group.status = analysis.status;
+        if (analysis.status === 'failure') {
+          group.failed += 1;
+        }
+        else if (analysis.status === 'pending') {
+          group.pending += 1;
+        }
+        else {
+          group.success += 1;
         }
       });
 
@@ -142,7 +144,7 @@ export default {
   async created() {
     try {
       this.getAllImages();
-      const fetchedGroups = await fetch(`http://localhost:9292/annotationGroup?projectId=${this.project.id}`);
+      const fetchedGroups = await fetch(`${this.$store.state.baseUrl}/annotationGroup?projectId=${this.project.id}`);
       const response = await fetchedGroups.json();
       const responseGroups = response.groups;
       let groups = [];
@@ -174,23 +176,5 @@ export default {
 
   .tr {
     height: 50px;
-  }
-
-  .status {
-    text-transform: capitalize;
-    color: white;
-    padding: 5px;
-    border-radius: 5px;
-    width: fit-content;
-    margin: auto;
-  }
-  .pending {
-    background: #ffa500;
-  }
-  .success {
-    background: #42ce77;
-  }
-  .failure {
-    background: #ff3860;
   }
 </style>

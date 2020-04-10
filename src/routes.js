@@ -39,6 +39,7 @@ import UserActivity from './components/user/UserActivity.vue';
 import PageNotFound from './components/PageNotFound.vue';
 import ProjectAnalyze from './components/project/ProjectAnalyze.vue';
 import ProjectChooseAnalysis from './components/project/ProjectChooseAnalysis';
+import AnnotationGroupResults from './components/project/AnnotationGroupResults';
 
 // Define routes
 const routes = [
@@ -73,6 +74,11 @@ const routes = [
       {
         path: '',
         component: ProjectHome
+      },
+      {
+        path: 'results/:idGroup',
+        name: 'results',
+        component: AnnotationGroupResults,
       },
       {
         path: 'analyze',
