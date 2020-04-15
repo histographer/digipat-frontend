@@ -9,7 +9,7 @@
       </div>
       <div class="panel-block">
             <b-table
-              v-if="group.annotations[0].image"
+              v-if="group.annotations"
               :data="group.annotations"
             >
               <template #default="{row: annotation}">
