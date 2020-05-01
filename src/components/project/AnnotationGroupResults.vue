@@ -13,6 +13,16 @@
               :data="group.annotations"
             >
               <template #default="{row: annotation}">
+                <b-table-column width="150" centered>
+                  <router-link :to="`/project/${projectId}/image/${annotation.image.id}`">
+                    <img :src="annotation.image.thumb" class="image-overview">
+                  </router-link>
+                </b-table-column>
+                <b-table-column label="Name" centered>
+                  <router-link :to="`/project/${projectId}/image/${annotation.image.id}`">
+                    <p>{{ annotation.image.instanceFilename }}</p>
+                  </router-link>
+                </b-table-column>
                 <template v-for="(result, index) in annotation.results">
                   <b-table-column :key="result.name" :label="result.name" centered :class="index !== annotation.results.length - 1 ? 'border-right' : ''">
                     <div class="component-grid" :style="`grid-template-columns: ${'1fr '.repeat(result.components.length)};`">
@@ -43,7 +53,7 @@
 </template>
 
 <script>
-import { Annotation } from 'cytomine-client';
+import { Annotation, ImageInstance } from 'cytomine-client';
 
 export default {
   name: 'AnnotationGroupResults',
@@ -64,9 +74,13 @@ export default {
       return await fetch(`${this.$store.state.baseUrl}/analysisResults?groupId=${this.$router.history.current.params.idGroup}`);
     },
     async openAnnotation(annotationId) {
-      const projectId = this.$router.history.current.params.idProject;
       const annotationObject = await Annotation.fetch(annotationId);
-      this.$router.push({ path: `/project/${projectId}/image/${annotationObject.image}/annotation/${annotationId}`});
+      this.$router.push({ path: `/project/${this.projectId}/image/${annotationObject.image}/annotation/${annotationId}`});
+    },
+    async image(annotation) {
+      const annotationObject = await Annotation.fetch(annotation.annotationId);
+      const image = await ImageInstance.fetch(annotationObject.image);
+      annotation.image = image;
     },
     async downloadCSV(name) {
       try {
@@ -97,6 +111,9 @@ export default {
       }
       else {
         this.group = await group.json();
+        for (let annotation of this.group.annotations) {
+          await this.image(annotation);
+        }
         this.loading = false;
       }
     }
@@ -108,6 +125,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+  .image-overview {
+    width: 256px;
+  }
+
   .panel-heading {
     display: grid;
     grid-template-columns: 1fr 1fr;
