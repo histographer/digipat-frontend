@@ -57,10 +57,10 @@ export default {
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'include', // include, *same-origin, omit
-        'Access-Control-Allow-Origin': this.$store.state.baseUrl,
-        'Access-Control-Allow-Headers': '*',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': this.$store.state.baseUrl,
+          'Access-Control-Allow-Headers': '*',
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
@@ -77,10 +77,10 @@ export default {
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
         credentials: 'include', // include, *same-origin, omit
-        'Access-Control-Allow-Origin': this.$store.state.baseUrl,
-        'Access-Control-Allow-Headers': '*',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': this.$store.state.baseUrl,
+          'Access-Control-Allow-Headers': '*',
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
