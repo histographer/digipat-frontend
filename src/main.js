@@ -78,7 +78,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$eventBus = new Vue();
 
 // Set baseURL
-store.commit('changeBaseUrl', 'http://localhost:9292');
+store.commit('changeBaseUrl', 'http://wizard-api.digipat.no');
 
 new Vue({
   render: h => h(App),

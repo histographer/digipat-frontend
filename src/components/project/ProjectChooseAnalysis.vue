@@ -54,15 +54,16 @@ export default {
       }
       const createResponse = await fetch(`${this.$store.state.baseUrl}/annotationGroup`, {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        mode: 'cors', // no-cors, *cors, same-origin
+        mode: 'no-cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
+        credentials: 'include', // include, *same-origin, omit
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': this.$store.state.baseUrl,
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
+        referrerPolicy: 'no-referrer-when-downgrade', // no-referrer, *client
         body: JSON.stringify(createGroupData) // body data type must match "Content-Type" header
       });
       const createResponseData = await createResponse.json(); // parses JSON response into native JavaScript objects
@@ -74,13 +75,14 @@ export default {
         method: 'POST', // *GET, POST, PUT, DELETE, etc.
         mode: 'cors', // no-cors, *cors, same-origin
         cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-        credentials: 'same-origin', // include, *same-origin, omit
+        credentials: 'include', // include, *same-origin, omit
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': this.$store.state.baseUrl,
           // 'Content-Type': 'application/x-www-form-urlencoded',
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
+        referrerPolicy: 'no-referrer-when-downgrade', // no-referrer, *client
         body: JSON.stringify(startAnalysisData) // body data type must match "Content-Type" header
       });
 
