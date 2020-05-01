@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     imageURL() {
-      return `http://core.jepat.jenslien.net/api/userannotation/${this.annotationID}/crop.jpg?maxSize=400&complete=true&thickness=2&increaseArea=1.45&draw=false&color=0x009BCC`;
+      return `http://core.digipat.no/api/userannotation/${this.annotationID}/crop.jpg?maxSize=400&complete=true&thickness=2&increaseArea=1.45&draw=false&color=0x009BCC`;
     },
     annotationID() {
       return this.$store.state.projects[this.projectId].analysis.annotationsAddedForAnalysis[0];
