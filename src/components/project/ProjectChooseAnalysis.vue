@@ -68,7 +68,7 @@ export default {
           'Access-Control-Allow-Origin': this.$store.state.baseUrl,
         },
         redirect: 'follow', // manual, *follow, error
-        referrerPolicy: 'no-referrer', // no-referrer, *client
+        referrerPolicy: 'no-referrer-when-downgrade', // no-referrer, *client
         body: JSON.stringify(startAnalysisData) // body data type must match "Content-Type" header
       });
 
