@@ -66,7 +66,6 @@ export default {
         headers: {
           'Content-Type': 'application/json',
           'Access-Control-Allow-Origin': this.$store.state.baseUrl,
-          'Access-Control-Request-Method': 'POST',
         },
         redirect: 'follow', // manual, *follow, error
         referrerPolicy: 'no-referrer-when-downgrade', // no-referrer, *client
