@@ -10,7 +10,7 @@ In order to build this application you only need NPM installed.
 ​
 ### Installing
 ​
-First ```npm i```
+First run ```npm i```
 
 After install all node modules simply run:
 
